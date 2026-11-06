@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11111a">
+    <meta name="description" content="Panel privado de soporte y tickets de Hypersex Go.">
+    <title>Hypersex Go | Soporte</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="lightning-field" aria-hidden="true"></div>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Hypersex Go, inicio">
+          <span class="brand-mark" aria-hidden="true">♛</span>
+          <span class="brand-copy">hypersex<span>go</span><small>CONTROL CENTER</small></span>
+        </a>
+        <div class="topbar-right">
+          <span class="secure-label"><span class="secure-dot"></span> Panel privado</span>
+          <button id="logout" class="button button-quiet hidden" type="button">Cerrar sesión <span aria-hidden="true">↗</span></button>
+        </div>
+      </header>
+
+      <section id="login-view" class="login-layout">
+        <div class="login-story">
+          <div class="story-pill"><span class="sparkle" aria-hidden="true">✦</span> TU SOPORTE, BAJO CONTROL</div>
+          <h1>Todo en orden.<br><span>Un ticket a la vez.</span></h1>
+          <p>Administra las conversaciones de tu comunidad desde un solo lugar, sin perder el hilo.</p>
+          <div class="story-preview" aria-hidden="true">
+            <div class="preview-head"><span class="preview-avatar">H</span><span><b>Centro de soporte</b><small>Hypersex Go · ahora</small></span><i></i></div>
+            <div class="preview-line preview-line-long"></div>
+            <div class="preview-line preview-line-short"></div>
+            <div class="preview-ticket"><span class="preview-ticket-icon">#</span><span><b>ticket-soporte</b><small>Respuesta rápida y privada</small></span><em>ABIERTO</em></div>
+          </div>
+          <div class="story-foot"><span class="foot-avatars"><i>H</i><i>+</i></span><span>Un espacio organizado para cada conversación.</span></div>
+        </div>
+
+        <div class="login-card">
+          <div class="login-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12a2 2 0 0 1 2 2v8H4v-8a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 14v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </div>
+          <p class="eyebrow">ACCESO DE ADMINISTRADOR</p>
+          <h2>Qué bueno verte.</h2>
+          <p class="login-subtitle">Entra para continuar a tu panel de soporte.</p>
+          <a id="discord-login" class="button button-primary full-width" href="/auth/discord">Continuar con Discord <span aria-hidden="true">→</span></a>
+          <p id="login-error" class="error" role="status"></p>
+          <div class="login-protection"><span aria-hidden="true">◈</span> Tu sesión está protegida y es privada.</div>
+        </div>
+      </section>
+
+      <section id="dashboard-view" class="dashboard-layout hidden">
+        <aside class="sidebar">
+          <p class="sidebar-label">ESPACIO DE TRABAJO</p>
+          <a class="side-link active" href="#overview"><span class="side-icon" aria-hidden="true">◫</span> Resumen</a>
+          <a class="side-link" href="#settings-routing"><span class="side-icon" aria-hidden="true">⌖</span> Canales</a>
+          <a class="side-link" href="#settings-panel"><span class="side-icon" aria-hidden="true">▧</span> Diseño del panel</a>
+          <a class="side-link" href="#settings-team"><span class="side-icon" aria-hidden="true">♙</span> Equipo</a>
+          <a class="side-link" href="#settings-rules"><span class="side-icon" aria-hidden="true">⚙</span> Reglas</a>
+          <a class="side-link" href="#tickets"><span class="side-icon" aria-hidden="true">▤</span> Tickets</a>
+          <div class="sidebar-bottom">
+            <div class="server-card">
+              <span class="server-avatar">H</span>
+              <span><b id="sidebar-guild">Tu servidor</b><small>Servidor conectado</small></span>
+              <span class="server-live" aria-label="En línea"></span>
+            </div>
+            <p class="sidebar-version">HYPERSEX GO <span>·</span> ADMIN</p>
+          </div>
+        </aside>
+
+        <main class="dashboard-main">
+          <div class="server-switcher">
+            <label for="guild-picker">Servidor de Discord</label>
+            <select id="guild-picker"><option value="">Cargando servidores…</option></select>
+            <a id="invite-bot" class="button button-primary hidden" href="#" target="_blank" rel="noopener noreferrer">Añadir Hypersex Go</a>
+          </div>
+          <p id="server-notice" class="server-notice" role="status">Selecciona un servidor para continuar.</p>
+          <div id="server-content" class="hidden">
+          <div id="overview" class="page-heading">
+            <div>
+              <p class="eyebrow">CENTRO DE CONTROL <span class="heading-dot">/</span> RESUMEN</p>
+              <h1>Tu comunidad, <span>en orden.</span></h1>
+              <p class="heading-subtitle">Aquí tienes lo que está pasando con el soporte.</p>
+            </div>
+            <button id="refresh" class="button button-secondary" type="button"><span aria-hidden="true">↻</span> Actualizar</button>
+          </div>
+
+          <div class="stats">
+            <article class="stat-card stat-total">
+              <span class="stat-icon" aria-hidden="true">▤</span>
+              <span class="stat-label">Total de tickets</span>
+              <strong id="total-count">0</strong>
+              <span class="stat-note">Registrados hasta ahora</span>
+            </article>
+            <article class="stat-card stat-open">
+              <span class="stat-icon" aria-hidden="true">◷</span>
+              <span class="stat-label">En conversación</span>
+              <strong id="open-count">0</strong>
+              <span class="stat-note"><i class="live-dot"></i> Necesitan atención</span>
+            </article>
+            <article class="stat-card stat-closed">
+              <span class="stat-icon" aria-hidden="true">✓</span>
+              <span class="stat-label">Resueltos</span>
+              <strong id="closed-count">0</strong>
+              <span class="stat-note">Conversaciones cerradas</span>
+            </article>
+          </div>
+
+          <section id="settings" class="panel-card settings-card">
+            <div class="section-heading">
+              <div class="section-title-wrap">
+                <span class="section-icon" aria-hidden="true">⚙</span>
+                <div><p class="eyebrow">PERSONALIZA TU SOPORTE</p><h2>Canales y equipo</h2></div>
+              </div>
+              <span id="settings-guild" class="guild-chip"></span>
+            </div>
+            <p class="muted settings-help">Elige dónde se crean los tickets, dónde publicar el panel y quién te ayuda a atenderlos.</p>
+            <form id="settings-form" class="settings-grid">
+              <div id="settings-routing" class="settings-section">
+                <h3>Canales y ubicaciones</h3>
+                <div class="field">
+                  <label for="ticket-category">Categoría de tickets</label>
+                  <select id="ticket-category" name="ticketCategoryId"><option value="">Sin categoría</option></select>
+                  <small>Los nuevos tickets aparecerán aquí.</small>
+                </div>
+                <div class="field">
+                  <label for="panel-channel">Canal del panel de soporte</label>
+                  <select id="panel-channel" name="ticketPanelChannelId"><option value="">Selecciona un canal</option></select>
+                  <small>Elige dónde podrán abrir tickets.</small>
+                </div>
+                <div class="field">
+                  <label for="log-channel">Canal de transcripciones</label>
+                  <select id="log-channel" name="logChannelId"><option value="">No guardar transcripciones</option></select>
+                  <small>Registro privado al cerrar un ticket.</small>
+                </div>
+                <div class="field">
+                  <label for="opened-log-channel">Avisos de nuevos tickets</label>
+                  <select id="opened-log-channel" name="openedLogChannelId"><option value="">No avisar</option></select>
+                  <small>Publica un aviso cuando se abra un ticket.</small>
+                </div>
+              </div>
+
+              <div id="settings-panel" class="settings-section">
+                <h3>Diseño del panel de Discord</h3>
+                <div class="field field-wide">
+                  <label for="panel-title">Título del panel</label>
+                  <input id="panel-title" name="panelTitle" maxlength="256" placeholder="Soporte de Hypersex Go">
+                </div>
+                <div class="field field-wide">
+                  <label for="panel-description">Descripción del panel</label>
+                  <textarea id="panel-description" name="panelDescription" maxlength="4000" rows="3" placeholder="Explica cómo puede pedir ayuda tu comunidad."></textarea>
+                  <small>Este texto aparece dentro de la tarjeta de Discord.</small>
+                </div>
+                <div class="field field-wide">
+                  <label for="panel-content">Texto encima de la tarjeta <span class="optional-label">OPCIONAL</span></label>
+                  <textarea id="panel-content" name="panelContent" maxlength="2000" rows="2" placeholder="Un mensaje que aparecerá antes de la tarjeta."></textarea>
+                </div>
+                <div class="field">
+                  <label for="panel-image">URL de imagen <span class="optional-label">OPCIONAL</span></label>
+                  <input id="panel-image" name="panelImageUrl" type="url" maxlength="2048" placeholder="https://tu-sitio.com/imagen.png">
+                  <small>Usa un enlace público que empiece con https://.</small>
+                </div>
+                <div class="field">
+                  <label for="panel-color">Color de la tarjeta</label>
+                  <div class="color-control">
+                    <input id="panel-color" name="panelColor" type="color" value="#1677ff">
+                    <span id="panel-color-value">#1677ff</span>
+                  </div>
+                </div>
+                <div class="field field-wide">
+                  <label for="panel-button-label">Texto del botón para abrir ticket</label>
+                  <input id="panel-button-label" name="panelButtonLabel" maxlength="80" placeholder="Crear ticket">
+                </div>
+                <details class="link-settings field-wide">
+                  <summary>Botones adicionales con enlaces <span>Hasta 4 botones, por ejemplo reglas o redes sociales.</span></summary>
+                  <div class="link-grid">
+                    <div class="link-field"><b>Botón 1</b><input name="panelLinkLabel1" maxlength="80" placeholder="Reglas del servidor"><input name="panelLinkUrl1" type="url" maxlength="512" placeholder="https://..."></div>
+                    <div class="link-field"><b>Botón 2</b><input name="panelLinkLabel2" maxlength="80" placeholder="Nuestro sitio"><input name="panelLinkUrl2" type="url" maxlength="512" placeholder="https://..."></div>
+                    <div class="link-field"><b>Botón 3</b><input name="panelLinkLabel3" maxlength="80" placeholder="Redes sociales"><input name="panelLinkUrl3" type="url" maxlength="512" placeholder="https://..."></div>
+                    <div class="link-field"><b>Botón 4</b><input name="panelLinkLabel4" maxlength="80" placeholder="Más información"><input name="panelLinkUrl4" type="url" maxlength="512" placeholder="https://..."></div>
+                  </div>
+                </details>
+              </div>
+
+              <div id="settings-team" class="settings-section">
+                <h3>Equipo y notificaciones</h3>
+                <div class="field">
+                  <label for="staff-role">Rol de soporte principal</label>
+                  <select id="staff-role" name="staffRoleId"><option value="">Sin rol principal</option></select>
+                  <small>Se usa como respaldo si no marcas roles de soporte adicionales.</small>
+                </div>
+                <fieldset class="field role-options">
+                  <legend>Roles de soporte adicionales</legend>
+                  <div id="support-roles" class="role-list"></div>
+                </fieldset>
+                <label class="toggle-field"><input name="pingSupportRoles" type="checkbox"><span>Avisar a los roles de soporte al abrir un ticket</span></label>
+                <label class="toggle-field"><input name="pingAuthorOnClaim" type="checkbox"><span>Avisar a quien abrió el ticket cuando alguien lo reclame</span></label>
+                <label class="toggle-field"><input name="dmUserOnClose" type="checkbox"><span>Enviar un mensaje privado al cerrar el ticket</span></label>
+              </div>
+
+              <div id="settings-rules" class="settings-section">
+                <h3>Límites y reglas de tickets</h3>
+                <div class="field">
+                  <label for="maxActiveTicketsPerUser">Tickets abiertos por persona</label>
+                  <input id="maxActiveTicketsPerUser" name="maxActiveTicketsPerUser" type="number" min="1" max="10" required>
+                </div>
+                <div class="field">
+                  <label for="maxActiveTickets">Límite de tickets abiertos del servidor</label>
+                  <input id="maxActiveTickets" name="maxActiveTickets" type="number" min="1" max="500" required>
+                </div>
+                <div class="field">
+                  <label for="claimMode">Reclamar tickets</label>
+                  <select id="claimMode" name="claimMode">
+                    <option value="enabled-private">Activado, visible para el equipo</option>
+                    <option value="private">Privado para quien lo reclama</option>
+                    <option value="read-only">Solo lectura para el resto del equipo</option>
+                    <option value="disabled">Desactivado</option>
+                  </select>
+                  <small>El equipo puede asignarse un ticket para atenderlo.</small>
+                </div>
+                <div class="field">
+                  <label for="defaultCloseReason">Motivo predeterminado de cierre</label>
+                  <input id="defaultCloseReason" name="defaultCloseReason" maxlength="500" placeholder="Atención completada">
+                </div>
+                <fieldset class="field role-options">
+                  <legend>Roles bloqueados</legend>
+                  <div id="blocked-roles" class="role-list"></div>
+                  <small>Los miembros con estos roles no podrán abrir tickets.</small>
+                </fieldset>
+                <label class="toggle-field"><input name="closeRequiresSupportRole" type="checkbox"><span>Solo el equipo de soporte puede cerrar tickets</span></label>
+                <label class="toggle-field"><input name="closeRequiresReason" type="checkbox"><span>Solicitar un motivo al cerrar un ticket</span></label>
+              </div>
+
+              <div class="settings-actions">
+                <button class="button button-primary" type="submit">Guardar cambios <span aria-hidden="true">→</span></button>
+                <button id="publish-panel" class="button button-secondary" type="button"><span aria-hidden="true">↗</span> Publicar panel</button>
+                <span id="settings-status" class="muted" role="status"></span>
+              </div>
+            </form>
+          </section>
+
+          <section id="tickets" class="panel-card tickets-card">
+            <div class="section-heading">
+              <div class="section-title-wrap">
+                <span class="section-icon tickets-icon" aria-hidden="true">▤</span>
+                <div><p class="eyebrow">Bandeja de entrada</p><h2>Tickets recientes</h2></div>
+              </div>
+              <span id="updated-at" class="updated-label"></span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Usuario</th><th>Canal</th><th>Estado</th><th>Fecha de apertura</th><th></th></tr></thead>
+                <tbody id="tickets-body"></tbody>
+              </table>
+            </div>
+            <div id="empty-state" class="empty-state hidden">
+              <span class="empty-icon" aria-hidden="true">✳</span>
+              <h3>Aún no hay tickets</h3>
+              <p>Cuando alguien necesite ayuda, sus tickets aparecerán aquí.</p>
+              <a href="#settings-panel" class="empty-link">Configura y publica tu panel <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+          <p id="dashboard-error" class="error" role="status"></p>
+          <footer class="dashboard-footer">Hecho para que tu comunidad reciba una mejor atención. <span>✦</span></footer>
+          </div>
+        </main>
+      </section>
+    </div>
+  </body>
+</html>
