@@ -58,6 +58,7 @@
           <a class="side-link active" href="#overview"><span class="side-icon" aria-hidden="true">◫</span> Resumen</a>
           <a class="side-link" href="#settings-routing"><span class="side-icon" aria-hidden="true">⌖</span> Canales</a>
           <a class="side-link" href="#settings-panel"><span class="side-icon" aria-hidden="true">▧</span> Diseño del panel</a>
+          <a class="side-link" href="#settings-identity"><span class="side-icon" aria-hidden="true">♛</span> Identidad</a>
           <a class="side-link" href="#settings-team"><span class="side-icon" aria-hidden="true">♙</span> Equipo</a>
           <a class="side-link" href="#settings-rules"><span class="side-icon" aria-hidden="true">⚙</span> Reglas</a>
           <a class="side-link" href="#tickets"><span class="side-icon" aria-hidden="true">▤</span> Tickets</a>
@@ -183,6 +184,20 @@
                     <div class="link-field"><b>Botón 4</b><input name="panelLinkLabel4" maxlength="80" placeholder="Más información"><input name="panelLinkUrl4" type="url" maxlength="512" placeholder="https://..."></div>
                   </div>
                 </details>
+              </div>
+
+              <div id="settings-identity" class="settings-section">
+                <h3>Identidad del bot en este servidor</h3>
+                <div class="field">
+                  <label for="bot-nickname">Apodo de Hypersex Go en Discord</label>
+                  <input id="bot-nickname" name="botNickname" maxlength="32" placeholder="Hypersex Soporte">
+                  <small>Cambia el apodo visible solo en este servidor. Déjalo vacío para usar el nombre global.</small>
+                </div>
+                <div class="field">
+                  <label for="bot-avatar-url">Imagen para el panel de tickets</label>
+                  <input id="bot-avatar-url" name="botAvatarUrl" type="url" maxlength="2048" placeholder="https://tu-sitio.com/logo.png">
+                  <small>Se muestra junto al nombre en el panel de tickets; Discord no permite cambiar por API el avatar de perfil del bot por servidor.</small>
+                </div>
               </div>
 
               <div id="settings-team" class="settings-section">

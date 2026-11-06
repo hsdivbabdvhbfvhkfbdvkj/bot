@@ -46,6 +46,8 @@ Abre la URL HTTPS, inicia sesión con Discord, elige un servidor y, si falta el 
 
 El dashboard organiza los ajustes en **Canales**, **Diseño del panel**, **Equipo**, **Reglas** y **Tickets**. Puedes elegir categorías y canales existentes, personalizar el contenido, color e imagen del panel, añadir hasta cuatro botones de enlace y publicar el panel. También configura roles de soporte/bloqueados, límites de apertura, reclamos, motivo y permisos de cierre, transcripciones y avisos. Estos ajustes se guardan por servidor.
 
+La sección **Identidad** permite definir un apodo distinto para el bot en cada servidor (requiere el permiso Administrar apodos) y una imagen para el encabezado del panel de tickets. Discord no permite que un bot cambie su avatar de perfil por servidor mediante la API; el avatar global se modifica desde Developer Portal.
+
 El bot crea canales privados, aplica los límites configurados, permite reclamar/cerrar/reabrir tickets y puede enviar transcripciones al canal elegido. El dashboard muestra estadísticas y tickets recientes. No todas las funciones avanzadas de Ticket King (por ejemplo, formularios multipregunta y varias clases de paneles) están implementadas todavía.
 
 Los tickets y las configuraciones se guardan en `data/`. Las sesiones se guardan localmente y caducan después de un día; la sesión del navegador dura hasta ocho horas.

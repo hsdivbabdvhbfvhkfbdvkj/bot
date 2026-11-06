@@ -27,6 +27,8 @@ async function main() {
     logChannelId: legacyGuildId ? process.env.LOG_CHANNEL_ID?.trim() || null : null,
     openedLogChannelId: null,
     staffRoleId: legacyGuildId ? process.env.STAFF_ROLE_ID?.trim() || null : null,
+    botNickname: "",
+    botAvatarUrl: "",
     supportRoleIds: [],
     blockedRoleIds: [],
     maxActiveTickets: 500,

@@ -168,6 +168,8 @@ async function loadSettings() {
     fillSelect("log-channel", data.textChannels, data.settings.logChannelId, "No guardar transcripciones");
     fillSelect("opened-log-channel", data.textChannels, data.settings.openedLogChannelId, "No avisar");
     fillSelect("staff-role", data.roles, data.settings.staffRoleId, "Sin rol de soporte");
+    setFieldValue("bot-nickname", data.settings.botNickname);
+    setFieldValue("bot-avatar-url", data.settings.botAvatarUrl);
     fillRoleChecks("support-roles", data.roles, data.settings.supportRoleIds);
     fillRoleChecks("blocked-roles", data.roles, data.settings.blockedRoleIds);
     setFieldValue("maxActiveTickets", data.settings.maxActiveTickets);

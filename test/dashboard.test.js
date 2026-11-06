@@ -20,12 +20,15 @@ const ids = {
   logs: "33333333333333333",
   role: "44444444444444444",
 };
+const testBotNickname = `Soporte ${Date.now()}`;
 let panelMessageCount;
 let lastPanelPayload;
+let lastBotNickname;
 
 before(async () => {
   panelMessageCount = 0;
   lastPanelPayload = null;
+  lastBotNickname = undefined;
   const channels = new Map([
     [ids.category, { id: ids.category, name: "Tickets", type: ChannelType.GuildCategory }],
     [ids.panel, makeTextChannel(ids.panel, "soporte")],
@@ -164,6 +167,11 @@ test("Discord OAuth scopes dashboard access to manageable, installed guilds", as
   const inviteUrl = new URL(availableGuilds.find((guild) => guild.id === ids.otherGuild).inviteUrl);
   assert.equal(inviteUrl.searchParams.get("guild_id"), ids.otherGuild);
   assert.equal(inviteUrl.searchParams.get("scope"), "bot applications.commands");
+  assert.notEqual(
+    BigInt(inviteUrl.searchParams.get("permissions")) & PermissionFlagsBits.ManageNicknames,
+    0n,
+    "new bot invites must include permission to set a server nickname",
+  );
 
   response = await post("/api/select-guild", { guildId: ids.otherGuild });
   assert.equal(response.status, 200);
@@ -224,6 +232,17 @@ test("Discord OAuth scopes dashboard access to manageable, installed guilds", as
   });
   assert.equal(response.status, 400, "only safe HTTP or HTTPS button links are accepted");
 
+  response = await put("/api/settings", {
+    botNickname: testBotNickname,
+    botAvatarUrl: "https://example.com/bot-avatar.png",
+  });
+  assert.equal(response.status, 200);
+  assert.equal(lastBotNickname, testBotNickname);
+  response = await fetch(`${baseUrl}/api/settings/options`, { headers: { cookie } });
+  const identitySettings = (await response.json()).settings;
+  assert.equal(identitySettings.botNickname, testBotNickname);
+  assert.equal(identitySettings.botAvatarUrl, "https://example.com/bot-avatar.png");
+
   response = await fetch(`${baseUrl}/api/settings/publish-panel`, {
     method: "POST",
     headers: { cookie, "x-csrf-token": csrfToken },
@@ -234,6 +253,8 @@ test("Discord OAuth scopes dashboard access to manageable, installed guilds", as
   assert.equal(lastPanelPayload.embeds[0].data.title, "Ayuda de la comunidad");
   assert.equal(lastPanelPayload.embeds[0].data.description, "Cuéntanos qué necesitas.");
   assert.equal(lastPanelPayload.embeds[0].data.image.url, "https://example.com/support.png");
+  assert.equal(lastPanelPayload.embeds[0].data.author.name, testBotNickname);
+  assert.equal(lastPanelPayload.embeds[0].data.author.icon_url, "https://example.com/bot-avatar.png");
   assert.deepEqual(
     lastPanelPayload.components[0].components.map((button) => button.data.label),
     ["Abrir un caso", "Reglas"],
@@ -259,7 +280,14 @@ function makeGuild(id, name, channels, roles) {
     name,
     channels: { cache: channels, fetch: async (channelId) => (channelId ? channels.get(channelId) : channels) },
     roles: { cache: roles, fetch: async () => roles },
-    members: { me: {} },
+    members: {
+      me: {
+        permissions: { has: () => true },
+        setNickname: async (nickname) => {
+          lastBotNickname = nickname;
+        },
+      },
+    },
   };
 }
 

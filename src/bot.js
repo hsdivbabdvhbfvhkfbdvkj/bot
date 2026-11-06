@@ -171,6 +171,12 @@ async function postTicketPanel(interaction, config) {
 
 export async function publishTicketPanel(channel, config) {
   const embed = new EmbedBuilder().setColor(config.panelColor);
+  if (config.botNickname || config.botAvatarUrl) {
+    embed.setAuthor({
+      name: config.botNickname || "Hypersex Go",
+      ...(config.botAvatarUrl ? { iconURL: config.botAvatarUrl } : {}),
+    });
+  }
   if (config.panelTitle) embed.setTitle(config.panelTitle);
   if (config.panelDescription) embed.setDescription(config.panelDescription);
   if (config.panelImageUrl) embed.setImage(config.panelImageUrl);

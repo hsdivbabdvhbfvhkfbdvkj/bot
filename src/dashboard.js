@@ -9,7 +9,7 @@ import path from "node:path";
 import { closeOpenTicketById, getTicketSummary, publishTicketPanel } from "./bot.js";
 import { getGuildSettings, listTickets, saveSettings } from "./store.js";
 
-const BOT_PERMISSIONS = "117776";
+const BOT_PERMISSIONS = (117776n | PermissionFlagsBits.ManageNicknames).toString();
 
 export function startDashboard(client, config) {
   const app = express();
@@ -250,7 +250,8 @@ export function startDashboard(client, config) {
       }
       const guildId = requireSelectedGuild(req, client, res);
       if (!guildId) return;
-      const settings = normalizeSettings(req.body, getGuildSettings(guildId));
+      const currentSettings = getGuildSettings(guildId);
+      const settings = normalizeSettings(req.body, currentSettings);
       const guild = await getConfiguredGuild(client, guildId);
       const [channels, roles] = await Promise.all([getGuildChannels(guild), getGuildRoles(guild)]);
 
@@ -285,6 +286,17 @@ export function startDashboard(client, config) {
       ) {
         res.status(400).json({ error: "El rol seleccionado no pertenece a este servidor." });
         return;
+      }
+
+      if (settings.botNickname !== (currentSettings.botNickname || "")) {
+        const botMember = guild.members.me;
+        if (!botMember?.permissions?.has(PermissionFlagsBits.ManageNicknames)) {
+          res.status(400).json({
+            error: "El bot necesita el permiso Administrar apodos. Actívalo para su rol en Ajustes del servidor > Roles y vuelve a intentarlo.",
+          });
+          return;
+        }
+        await botMember.setNickname(settings.botNickname || null);
       }
 
       await saveSettings(guildId, settings);
@@ -420,6 +432,8 @@ function settingsFrom(settings) {
     logChannelId: settings.logChannelId,
     openedLogChannelId: settings.openedLogChannelId,
     staffRoleId: settings.staffRoleId,
+    botNickname: settings.botNickname || "",
+    botAvatarUrl: settings.botAvatarUrl || "",
     supportRoleIds: settings.supportRoleIds,
     blockedRoleIds: settings.blockedRoleIds,
     maxActiveTickets: settings.maxActiveTickets,
@@ -497,20 +511,24 @@ export function normalizeSettings(body, currentSettings = {}) {
   if (!["disabled", "enabled-private", "private", "read-only"].includes(settings.claimMode)) {
     throw Object.assign(new Error("El modo de reclamo seleccionado no es válido."), { status: 400 });
   }
-  settings.panelTitle = textSetting(body.panelTitle, "El título", 256);
-  settings.panelDescription = optionalText(body.panelDescription, "La descripción", 4000);
-  settings.panelContent = optionalText(body.panelContent, "El texto del mensaje", 2000);
-  settings.panelImageUrl = optionalUrl(body.panelImageUrl, "La imagen", true, 2048);
-  settings.panelButtonLabel = textSetting(body.panelButtonLabel, "El texto del botón", 80);
+  settings.botNickname = optionalText(body.botNickname ?? currentSettings.botNickname ?? "", "El nombre del bot en este servidor", 32);
+  settings.botAvatarUrl = optionalUrl(body.botAvatarUrl ?? currentSettings.botAvatarUrl ?? "", "La imagen del bot para el panel", true, 2048);
+  settings.panelTitle = textSetting(body.panelTitle ?? currentSettings.panelTitle, "El título", 256);
+  settings.panelDescription = optionalText(body.panelDescription ?? currentSettings.panelDescription ?? "", "La descripción", 4000);
+  settings.panelContent = optionalText(body.panelContent ?? currentSettings.panelContent ?? "", "El texto del mensaje", 2000);
+  settings.panelImageUrl = optionalUrl(body.panelImageUrl ?? currentSettings.panelImageUrl ?? "", "La imagen", true, 2048);
+  settings.panelButtonLabel = textSetting(body.panelButtonLabel ?? currentSettings.panelButtonLabel, "El texto del botón", 80);
 
-  if (typeof body.panelColor !== "string" || !/^#[\da-f]{6}$/i.test(body.panelColor)) {
+  const panelColor = body.panelColor ?? currentSettings.panelColor;
+  if (typeof panelColor !== "string" || !/^#[\da-f]{6}$/i.test(panelColor)) {
     throw Object.assign(new Error("El color debe ser un código hexadecimal como #8f6acb."), { status: 400 });
   }
-  settings.panelColor = body.panelColor.toLowerCase();
-  if (!Array.isArray(body.panelLinks) || body.panelLinks.length > 4) {
+  settings.panelColor = panelColor.toLowerCase();
+  const panelLinks = body.panelLinks ?? currentSettings.panelLinks ?? [];
+  if (!Array.isArray(panelLinks) || panelLinks.length > 4) {
     throw Object.assign(new Error("Puedes configurar hasta cuatro botones con enlace."), { status: 400 });
   }
-  settings.panelLinks = body.panelLinks.map((link, index) => {
+  settings.panelLinks = panelLinks.map((link, index) => {
     if (!link || typeof link !== "object" || Array.isArray(link)) {
       throw Object.assign(new Error(`Revisa el botón con enlace ${index + 1}.`), { status: 400 });
     }
