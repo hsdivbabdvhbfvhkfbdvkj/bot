@@ -383,6 +383,7 @@ body {
   background: rgba(5, 19, 39, .34);
   scroll-margin-top: 20px;
 }
+.settings-section:not(.is-active) { display: none; }
 .settings-section h3 { grid-column: 1 / -1; margin: 0; color: #b9dfff; font: 700 12px Manrope, sans-serif; }
 .role-options { min-width: 0; border: 1px solid rgba(123, 184, 255, .12); border-radius: 9px; padding: 10px; }
 .role-options legend { padding: 0 5px; color: #c7d9ec; font-size: 10px; font-weight: 600; }
@@ -393,6 +394,7 @@ body {
 .toggle-field { min-height: 39px; display: flex; align-items: center; gap: 9px; border: 1px solid rgba(123, 184, 255, .1); border-radius: 9px; padding: 8px 10px; color: #b6c8df; font-size: 10px; }
 .settings-section .field input, .settings-section .field textarea, .settings-section .field select { background-color: #091a31; }
 .settings-actions { scroll-margin-top: 20px; }
+.dashboard-page, .settings-card, .tickets-card { scroll-margin-top: 24px; }
 
 @media (max-width: 700px) {
   .side-link { border-color: rgba(123, 184, 255, .1); background: rgba(9, 25, 48, .7); }

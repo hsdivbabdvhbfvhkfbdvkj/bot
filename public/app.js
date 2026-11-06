@@ -33,6 +33,7 @@ function showDashboard() {
   loginView.classList.add("hidden");
   dashboardView.classList.remove("hidden");
   logoutButton.classList.remove("hidden");
+  showDashboardPage(location.hash.slice(1));
 }
 
 function showLogin() {
@@ -76,11 +77,67 @@ document.querySelector("#settings-form").addEventListener("submit", saveDashboar
 document.querySelector("#publish-panel").addEventListener("click", publishPanel);
 document.querySelector("#panel-color").addEventListener("input", updatePanelColorLabel);
 document.querySelectorAll(".side-link").forEach((link) => {
-  link.addEventListener("click", () => {
-    document.querySelectorAll(".side-link").forEach((item) => item.classList.remove("active"));
-    link.classList.add("active");
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    showDashboardPage(link.hash.slice(1));
+    history.pushState(null, "", link.hash);
   });
 });
+window.addEventListener("hashchange", () => showDashboardPage(location.hash.slice(1)));
+window.addEventListener("popstate", () => showDashboardPage(location.hash.slice(1)));
+
+const settingsPages = {
+  "settings-routing": {
+    title: "Canales",
+    description: "Elige las categorías y canales de este servidor para tickets, paneles y registros.",
+  },
+  "settings-panel": {
+    title: "Diseño del panel",
+    description: "Personaliza el texto, la imagen, el color y los botones del panel de soporte.",
+  },
+  "settings-identity": {
+    title: "Identidad",
+    description: "Configura cómo se presenta Hypersex Go en este servidor y en su panel.",
+  },
+  "settings-team": {
+    title: "Equipo",
+    description: "Define los roles de soporte y las notificaciones para atender los tickets.",
+  },
+  "settings-rules": {
+    title: "Reglas",
+    description: "Ajusta los límites de apertura, reclamos y condiciones de cierre.",
+  },
+};
+
+function showDashboardPage(requestedPage) {
+  const isSettingsPage = Object.hasOwn(settingsPages, requestedPage);
+  const isTicketsPage = requestedPage === "tickets";
+  const isOverviewPage = !isSettingsPage && !isTicketsPage;
+  const activeSettingsPage = isSettingsPage ? requestedPage : "settings-routing";
+
+  document.querySelector("#overview-page").classList.toggle("hidden", !isOverviewPage);
+  document.querySelector("#settings").classList.toggle("hidden", !isSettingsPage);
+  document.querySelector("#tickets").classList.toggle("hidden", !isTicketsPage);
+  for (const [pageId, page] of Object.entries(settingsPages)) {
+    const section = document.querySelector(`#${pageId}`);
+    const isActive = isSettingsPage && pageId === activeSettingsPage;
+    section.classList.toggle("hidden", !isActive);
+    section.classList.toggle("is-active", isActive);
+  }
+
+  const settingsPage = settingsPages[activeSettingsPage];
+  if (isSettingsPage) {
+    document.querySelector("#settings-heading").textContent = settingsPage.title;
+    document.querySelector("#settings-help").textContent = settingsPage.description;
+    document.querySelector("#publish-panel").classList.toggle("hidden", activeSettingsPage !== "settings-panel");
+  }
+  for (const link of document.querySelectorAll(".side-link")) {
+    const isActive = link.hash.slice(1) === (isSettingsPage ? activeSettingsPage : isTicketsPage ? "tickets" : "overview");
+    link.classList.toggle("active", isActive);
+    if (isActive) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  }
+}
 
 async function loadGuilds(preferredGuildId) {
   try {

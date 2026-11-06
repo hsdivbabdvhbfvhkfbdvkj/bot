@@ -80,6 +80,7 @@
           </div>
           <p id="server-notice" class="server-notice" role="status">Selecciona un servidor para continuar.</p>
           <div id="server-content" class="hidden">
+          <div id="overview-page" class="dashboard-page">
           <div id="overview" class="page-heading">
             <div>
               <p class="eyebrow">CENTRO DE CONTROL <span class="heading-dot">/</span> RESUMEN</p>
@@ -109,16 +110,17 @@
               <span class="stat-note">Conversaciones cerradas</span>
             </article>
           </div>
+          </div>
 
-          <section id="settings" class="panel-card settings-card">
+          <section id="settings" class="panel-card settings-card hidden">
             <div class="section-heading">
               <div class="section-title-wrap">
                 <span class="section-icon" aria-hidden="true">⚙</span>
-                <div><p class="eyebrow">PERSONALIZA TU SOPORTE</p><h2>Canales y equipo</h2></div>
+                <div><p class="eyebrow">PERSONALIZA TU SOPORTE</p><h2 id="settings-heading">Configuración</h2></div>
               </div>
               <span id="settings-guild" class="guild-chip"></span>
             </div>
-            <p class="muted settings-help">Elige dónde se crean los tickets, dónde publicar el panel y quién te ayuda a atenderlos.</p>
+            <p id="settings-help" class="muted settings-help">Configura esta sección para el servidor seleccionado.</p>
             <form id="settings-form" class="settings-grid">
               <div id="settings-routing" class="settings-section">
                 <h3>Canales y ubicaciones</h3>
@@ -257,7 +259,7 @@
             </form>
           </section>
 
-          <section id="tickets" class="panel-card tickets-card">
+          <section id="tickets" class="panel-card tickets-card hidden">
             <div class="section-heading">
               <div class="section-title-wrap">
                 <span class="section-icon tickets-icon" aria-hidden="true">▤</span>
